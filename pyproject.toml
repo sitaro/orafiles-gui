@@ -1,11 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "orafiles-gui"
 version = "1.0.0"
 description = "Oracle Configuration File Editor (listener.ora, tnsnames.ora, sqlnet.ora)"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "sitaro"}]
+keywords = ["oracle", "listener.ora", "tnsnames.ora", "sqlnet.ora", "gui"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Database",
+]
 dependencies = [
     "customtkinter>=5.2.0",
 ]
 
 [project.scripts]
 orafiles-gui = "orafiles.app:main"
+
+[tool.setuptools.packages.find]
+include = ["orafiles*"]
