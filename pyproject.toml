@@ -1,0 +1,11 @@
+[project]
+name = "orafiles-gui"
+version = "1.0.0"
+description = "Oracle Configuration File Editor (listener.ora, tnsnames.ora, sqlnet.ora)"
+requires-python = ">=3.10"
+dependencies = [
+    "customtkinter>=5.2.0",
+]
+
+[project.scripts]
+orafiles-gui = "orafiles.app:main"

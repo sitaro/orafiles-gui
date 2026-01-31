@@ -1,0 +1,107 @@
+# ============================================================
+# Listener Configuration - Multi-Database Environment
+# ============================================================
+
+# --- Primary Listener on Standard Port ---
+
+LISTENER =
+  (ADDRESS_LIST =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dbprod01.example.com)(PORT = 1521))
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 10.0.1.50)(PORT = 1521))
+    (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1521))
+  )
+
+SID_LIST_LISTENER =
+  (SID_DESC =
+    (SID_NAME = ORCL)
+    (GLOBAL_DBNAME = orcl.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/19.3.0/dbhome_1)
+  )
+  (SID_DESC =
+    (SID_NAME = FINDB)
+    (GLOBAL_DBNAME = findb.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/19.3.0/dbhome_1)
+    (SDU = 32767)
+  )
+  (SID_DESC =
+    (SID_NAME = HRDB)
+    (GLOBAL_DBNAME = hrdb.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/19.3.0/dbhome_1)
+  )
+  (SID_DESC =
+    (SID_NAME = PLSExtProc)
+    (ORACLE_HOME = /u01/app/oracle/product/19.3.0/dbhome_1)
+    (PROGRAM = extproc)
+    (ENVS = "EXTPROC_DLLS=ONLY:/u01/app/oracle/lib/mylib.so")
+  )
+
+# Control
+ADMIN_RESTRICTIONS_LISTENER = ON
+SAVE_CONFIG_ON_STOP_LISTENER = OFF
+INBOUND_CONNECT_TIMEOUT_LISTENER = 60
+MAX_ALL_CONNECTIONS_LISTENER = 512
+DEFAULT_SERVICE_LISTENER = orcl.example.com
+DYNAMIC_REGISTRATION_LISTENER = ON
+
+# Rate Limiting
+CONNECTION_RATE_LISTENER = 50
+
+# Security
+VALID_NODE_CHECKING_REGISTRATION_LISTENER = ON
+SECURE_REGISTER_LISTENER = TCPS
+
+# Diagnostics
+DIAG_ADR_ENABLED_LISTENER = ON
+ADR_BASE_LISTENER = /u01/app/oracle
+TRACE_LEVEL_LISTENER = OFF
+LOG_FILE_NUM_LISTENER = 10
+LOG_FILE_SIZE_LISTENER = 10485760
+
+# --- Secure Listener on TCPS Port ---
+
+LISTENER_SECURE =
+  (ADDRESS = (PROTOCOL = TCPS)(HOST = dbprod01.example.com)(PORT = 2484))
+
+SID_LIST_LISTENER_SECURE =
+  (SID_DESC =
+    (SID_NAME = ORCL)
+    (GLOBAL_DBNAME = orcl.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/19.3.0/dbhome_1)
+  )
+  (SID_DESC =
+    (SID_NAME = FINDB)
+    (GLOBAL_DBNAME = findb.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/19.3.0/dbhome_1)
+  )
+
+# SSL/TLS for Secure Listener
+SSL_VERSION_LISTENER_SECURE = 1.2
+SSL_CLIENT_AUTHENTICATION_LISTENER_SECURE = FALSE
+ADMIN_RESTRICTIONS_LISTENER_SECURE = ON
+INBOUND_CONNECT_TIMEOUT_LISTENER_SECURE = 30
+
+# --- Development Listener on Non-Standard Port ---
+
+LISTENER_DEV =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = dbdev01.example.com)(PORT = 1525))
+  (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC_DEV))
+
+SID_LIST_LISTENER_DEV =
+  (SID_DESC =
+    (SID_NAME = DEVDB)
+    (GLOBAL_DBNAME = devdb.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/21.3.0/dbhome_1)
+  )
+  (SID_DESC =
+    (SID_NAME = TESTDB)
+    (GLOBAL_DBNAME = testdb.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/21.3.0/dbhome_1)
+  )
+  (SID_DESC =
+    (SID_NAME = QADB)
+    (GLOBAL_DBNAME = qadb.example.com)
+    (ORACLE_HOME = /u01/app/oracle/product/21.3.0/dbhome_1)
+  )
+
+DIAG_ADR_ENABLED_LISTENER_DEV = ON
+TRACE_LEVEL_LISTENER_DEV = ADMIN

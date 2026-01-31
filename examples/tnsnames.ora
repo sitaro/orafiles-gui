@@ -1,0 +1,222 @@
+# ============================================================
+# TNS Names Configuration - Multi-Environment
+# ============================================================
+
+# --- Production Databases ---
+
+ORCL =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (FAILOVER = ON)
+      (LOAD_BALANCE = ON)
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbprod01.example.com)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbprod02.example.com)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = orcl.example.com)
+      (SERVER = DEDICATED)
+      (FAILOVER_MODE =
+        (TYPE = SELECT)
+        (METHOD = BASIC)
+        (RETRIES = 30)
+        (DELAY = 5)
+      )
+    )
+    (EXPIRE_TIME = 3)
+    (SDU = 32767)
+  )
+
+ORCL_SECURE =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCPS)(HOST = dbprod01.example.com)(PORT = 2484))
+    (CONNECT_DATA =
+      (SERVICE_NAME = orcl.example.com)
+      (SERVER = DEDICATED)
+    )
+    (SECURITY =
+      (SSL_SERVER_DN_MATCH = ON)
+      (SSL_SERVER_CERT_DN = "CN=dbprod01.example.com,O=Example Corp,C=DE")
+      (WALLET_LOCATION = (SOURCE = (METHOD = FILE)(METHOD_DATA = (DIRECTORY = /u01/app/oracle/wallet))))
+    )
+  )
+
+FINDB =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (FAILOVER = ON)
+      (LOAD_BALANCE = ON)
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbprod01.example.com)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbprod02.example.com)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = findb.example.com)
+      (SERVER = DEDICATED)
+      (FAILOVER_MODE =
+        (TYPE = SESSION)
+        (METHOD = BASIC)
+        (RETRIES = 20)
+        (DELAY = 10)
+      )
+    )
+    (EXPIRE_TIME = 3)
+  )
+
+HRDB =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dbprod01.example.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = hrdb.example.com)
+      (SERVER = DEDICATED)
+    )
+  )
+
+# --- Data Warehouse (Shared Server) ---
+
+DWH =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dbdwh01.example.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = dwh.example.com)
+      (SERVER = SHARED)
+      (INSTANCE_NAME = dwh1)
+    )
+    (SDU = 65535)
+    (RECV_BUF_SIZE = 65536)
+    (SEND_BUF_SIZE = 65536)
+    (COMPRESSION = ON)
+    (COMPRESSION_LEVELS = HIGH)
+  )
+
+DWH_RO =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (LOAD_BALANCE = ON)
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbdwh02.example.com)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbdwh03.example.com)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = dwh_readonly.example.com)
+      (SERVER = SHARED)
+    )
+    (COMPRESSION = ON)
+    (COMPRESSION_LEVELS = LOW)
+  )
+
+# --- Development Databases ---
+
+DEVDB =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dbdev01.example.com)(PORT = 1525))
+    (CONNECT_DATA =
+      (SERVICE_NAME = devdb.example.com)
+      (SERVER = DEDICATED)
+    )
+  )
+
+TESTDB =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dbdev01.example.com)(PORT = 1525))
+    (CONNECT_DATA =
+      (SERVICE_NAME = testdb.example.com)
+      (SERVER = DEDICATED)
+    )
+  )
+
+QADB =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dbdev01.example.com)(PORT = 1525))
+    (CONNECT_DATA =
+      (SERVICE_NAME = qadb.example.com)
+      (SERVER = DEDICATED)
+    )
+    (CONNECT_TIMEOUT = 30)
+    (RETRY_COUNT = 3)
+    (RETRY_DELAY = 10)
+  )
+
+# --- Oracle RAC Cluster ---
+
+RACDB =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (FAILOVER = ON)
+      (LOAD_BALANCE = ON)
+      (ADDRESS = (PROTOCOL = TCP)(HOST = racnode1.example.com)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = racnode2.example.com)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = racnode3.example.com)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = racdb_svc.example.com)
+      (SERVER = DEDICATED)
+      (FAILOVER_MODE =
+        (TYPE = SELECT)
+        (METHOD = BASIC)
+        (RETRIES = 60)
+        (DELAY = 3)
+      )
+    )
+    (EXPIRE_TIME = 3)
+  )
+
+RACDB_BATCH =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (LOAD_BALANCE = ON)
+      (ADDRESS = (PROTOCOL = TCP)(HOST = racnode1.example.com)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = racnode2.example.com)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = racnode3.example.com)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = racdb_batch.example.com)
+      (SERVER = DEDICATED)
+    )
+  )
+
+# --- Connection Pooling / DRCP ---
+
+POOLDB =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dbprod01.example.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = orcl.example.com)
+      (SERVER = POOLED)
+      (POOL_CONNECTION_CLASS = MY_APP_CLASS)
+      (POOL_PURITY = SELF)
+    )
+  )
+
+# --- External via HTTPS Proxy ---
+
+CLOUDDB =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCPS)(HOST = adb.eu-frankfurt-1.oraclecloud.com)(PORT = 1522))
+    (CONNECT_DATA =
+      (SERVICE_NAME = abc123def_clouddb_high.adb.oraclecloud.com)
+      (SERVER = DEDICATED)
+    )
+    (SECURITY =
+      (SSL_SERVER_DN_MATCH = ON)
+    )
+    (HTTPS_PROXY = proxy.example.com)
+    (HTTPS_PROXY_PORT = 8080)
+  )
+
+# --- Heterogeneous Services (Gateway) ---
+
+MSSQL_LINK =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = gwserver.example.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SID = mssql_gw)
+      (HS = OK)
+    )
+  )
+
+MYSQL_LINK =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = gwserver.example.com)(PORT = 1522))
+    (CONNECT_DATA =
+      (SID = mysql_gw)
+      (HS = OK)
+    )
+  )
